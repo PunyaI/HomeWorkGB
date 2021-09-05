@@ -45,7 +45,7 @@ namespace HomeWorkGB
             double y = pointone.Y - pointtwo.Y;
             return Math.Sqrt((x * x) + (y * y));
         }
-        public static float PointDistanceStructFloatWithoutRoot(PointStruct pointone, PointStruct pointtwo)
+        public static float PointDistanceStructFloatWithoutSqrt(PointStruct pointone, PointStruct pointtwo)
         {
             float x = pointone.X - pointtwo.X;
             float y = pointone.Y - pointtwo.Y;
