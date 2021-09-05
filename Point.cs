@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HomeWorkGB
 {
@@ -23,21 +19,21 @@ namespace HomeWorkGB
         public double Y;
     }
 
-    
+
     public class PointDistance
     {
         public static float PointDistanceClassFloat(PointClass pointone, PointClass pointtwo)
         {
             float x = pointone.X - pointtwo.X;
             float y = pointone.Y - pointtwo.Y;
-            return MathF.Sqrt((x * x) + (y * y));
+            return (float)Math.Sqrt((x * x) + (y * y));
         }
 
         public static float PointDistanceStructFloat(PointStruct pointone, PointStruct pointtwo)
         {
             float x = pointone.X - pointtwo.X;
             float y = pointone.Y - pointtwo.Y;
-            return MathF.Sqrt((x * x) + (y * y));
+            return (float)Math.Sqrt((x * x) + (y * y));
         }
         public static double PointDistanceStructDouble(PointStructDouble pointone, PointStructDouble pointtwo)
         {
@@ -49,11 +45,10 @@ namespace HomeWorkGB
         {
             float x = pointone.X - pointtwo.X;
             float y = pointone.Y - pointtwo.Y;
-            float res = x * x + y * y;
-            return res;
+            return (x * x) + (y * y);
         }
 
     }
-        
-        
+
+
 }
