@@ -5,8 +5,122 @@ using System.Text;
 
 namespace HomeWorkGB
 {
+    
     class Program
     {
+       
+        static void Main(string[] args)
+        {
+
+            Console.WriteLine("                Задание № 1");
+            Console.WriteLine();
+            TaskStrings(10000);
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("                Задание № 2");
+            Console.WriteLine();
+            TaskTree();
+        }
+        public static void TaskStrings(int count)
+        {
+            var strings = RandomStrings(count);
+            var hashset = new HashSet<string>();
+            string test = "test";
+            for (int i = 0; i < count; i++)
+            {
+                hashset.Add(strings[i]);
+            }
+            var timer = new Stopwatch();
+            timer.Start();
+            bool check = hashset.Contains(test);
+            timer.Stop();
+            Console.WriteLine($"Время поиска в HashSet: {timer.Elapsed}");
+            if (check)
+
+            {
+                Console.WriteLine($"Элемент '{test}' найден в HashSet");
+            }
+            else
+            {
+                Console.WriteLine($"Элемент '{test}' не найден в HashSet");
+            }
+
+
+            timer.Reset();
+            var array = strings;
+            check = true;
+            timer.Start();
+            for (int i = 0; i < count; i++)
+            {
+                if (array[i] == test)
+                {
+                    Console.WriteLine($"Элемент '{array[i]}' найден в массиве");
+                    check = false;
+                    break;
+                }
+            }
+            timer.Stop();
+            Console.WriteLine($"Время поиска в массиве: {timer.Elapsed}");
+            if (check)
+            {
+                Console.WriteLine($"Элемент '{test}' не найден в массиве.");
+            }
+        }
+
+
+
+        public static void TaskTree()
+        {
+            var tree = new Tree(15);
+            Console.WriteLine("Строим дерево с корнем 15");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(), 0);
+            Console.WriteLine();
+            Console.WriteLine("Добавляем в дерево значения кратные 3 (3, 6, 9, ..., 42)" );
+            for (int i = 1; i < 15; i++)              
+            {
+                tree.AddItem(i * 3);
+            }
+            Console.WriteLine("Теперь дерево выглядит так:");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(), 0); 
+            Console.WriteLine();
+            int search = 27;
+            var res = tree.GetNodeByValue(search);
+            Console.WriteLine($"Результат поиска элемента со значением {search} -   L: {res.LeftChild?.Value}    P: {res.Parent?.Value}       R {res.RightChild?.Value}               Value {res.Value}");
+            tree.RemoveItem(9);
+            Console.WriteLine("Удаляем элемент со значением 9 (вместо со всеми его 'детьми')");
+            Console.WriteLine("Теперь дерево выглядит так:");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(), 0);
+            Console.WriteLine();
+            tree.AddItem(233);
+            Console.WriteLine("Добавляем элемент 233");
+            Console.WriteLine("Теперь дерево выглядит так:");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(), 0);
+            Console.WriteLine();
+            tree.AddItem(234);
+            Console.WriteLine("Добавляем элемент 234");
+            Console.WriteLine("Теперь дерево выглядит так:");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(), 0);
+            Console.WriteLine();
+            tree.AddItem(235);
+            Console.WriteLine("Добавляем элемент 234");
+            Console.WriteLine("Теперь дерево выглядит так:");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(), 0);
+            Console.WriteLine();
+            tree.AddItem(239);
+            Console.WriteLine("Добавляем элемент 239");
+            Console.WriteLine("Теперь дерево выглядит так:");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(), 0);
+        }
+
+
         public static string[] RandomStrings(int count)
         {
             var result = new string[count];
@@ -24,120 +138,6 @@ namespace HomeWorkGB
             }
             result[count - 1] = "test";
             return result;
-        }
-        static void Main(string[] args)
-        {
-
-            Console.WriteLine("                Задание № 1");
-            Console.WriteLine();
-            int count = 20000;
-            var strings = RandomStrings(count);
-            var hashset = new HashSet<string>();
-            string test = "test";
-            for (int i = 0; i < count; i++)
-            {
-                hashset.Add(strings[i]);
-            }
-            var timer = new Stopwatch();
-            timer.Start();
-            bool check = hashset.Contains(test);
-            timer.Stop();
-            Console.WriteLine($"Время поиска: {timer.Elapsed}");
-            if (check)
-                
-            {
-                Console.WriteLine($"Элемент '{test}' найден в HashSet");
-            }
-            else
-            {
-                Console.WriteLine($"Элемент '{test}' не найден в HashSet");
-            }
-            
-            
-            timer.Reset();
-            var array = strings;
-            check = true;
-            timer.Start();
-            for (int i = 0; i < count; i++)
-            {
-                if(array[i]==test)
-                {
-                    Console.WriteLine($"Элемент '{array[i]}' найден в HashSet");
-                    check = false;
-                    break;
-                }
-            }
-            timer.Stop();
-            Console.WriteLine($"Время поиска: {timer.Elapsed}");
-            if (check)
-            {
-                Console.WriteLine($"Элемент '{test}' не найден в массиве.");
-            }
-
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("                Задание № 2");
-            Console.WriteLine();
-
-
-
-
-
-
-
-
-
-
-
-
-
-            //    Console.WriteLine();
-            //    Console.WriteLine("                   Задание №2");
-            //    Console.WriteLine();
-            //    int[] array = { 2, 4, 5, 7, 9, 11, 15, 18, 23, 29, 32, 33, 36, 39, 40, 42, 44, 59, 89, 90 };
-            //    int[] array2 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
-            //    var testcase1 = new TestCase()
-            //    {
-            //        input = array,
-            //        inputsearch = 4,
-            //        expected = 1,
-            //        expectedException = null
-            //    };
-            //    var testcase2 = new TestCase()
-            //    {
-            //        input = array,
-            //        inputsearch = 89,
-            //        expected = 18,
-            //        expectedException = null
-            //    };
-            //    var testcase3 = new TestCase()
-            //    {
-            //        input = array2,
-            //        inputsearch = 9,
-            //        expected = 8,
-            //        expectedException = null
-            //    };
-            //    var testcase4 = new TestCase()
-            //    {
-            //        input = array2,
-            //        inputsearch = 20,
-            //        expected = 19,
-            //        expectedException = null
-            //    };
-            //    var testcase5 = new TestCase()
-            //    {
-            //        input = array,
-            //        inputsearch = -1,
-            //        expected = 32,
-            //        expectedException = new ArgumentException()
-            //};
-
-            //    TestCase.Test(testcase1);
-            //    TestCase.Test(testcase2);
-            //    TestCase.Test(testcase3);
-            //    TestCase.Test(testcase4);
-            //    TestCase.Test(testcase5);
         }
     }
         
