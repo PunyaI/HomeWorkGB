@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
+
 namespace HomeWorkGB
 {
     class Program
@@ -23,65 +24,52 @@ namespace HomeWorkGB
             int[] mas = new int[100];
             for (int i = 0; i < mas.Length; i++)
             {
-                mas[i] = rand.Next(1, 10);
+                mas[i] = rand.Next(15,10000000);
             }
-            int[] mas1 = mas;
+            
+            int[] mas1 = new int[mas.Length];
+            int[] mas2 = new int[mas.Length];
+            int[] mas3 = new int[mas.Length];
+            mas.CopyTo(mas1,0);
+            mas.CopyTo(mas2, 0);
+            mas.CopyTo(mas3, 0);
             Console.WriteLine("Исходный массив");
-           PrintArray(mas);
+           //PrintArray(mas);
             Console.WriteLine();
             var timer = new Stopwatch();
-            Console.WriteLine("Блочная сортировка");
+            Console.WriteLine("Блочная сортировка подсчётом");
             timer.Start();
-            DoBucketSort(mas);
+            MaxBucketsSort.Sort(mas);
             timer.Stop();
             Console.WriteLine($"Время выполнения: {timer.Elapsed}");
             timer.Reset();
-            PrintArray(mas);
+            //PrintArray(mas);
+            Console.WriteLine();
+            Console.WriteLine("Блочная сортировка с пузырьковой внутри");
+            timer.Start();
+            BucketSort.Sort(mas1);
+            timer.Stop();
+            Console.WriteLine($"Время выполнения: {timer.Elapsed}");
+            timer.Reset();
+            //PrintArray(mas1);
+            Console.WriteLine();
+            Console.WriteLine("Блочная сортировка с автосортировкой List внутри");
+            timer.Start();
+            BucketSort.Sort(mas2, true);
+            timer.Stop();
+            Console.WriteLine($"Время выполнения: {timer.Elapsed}");
+            timer.Reset();
+            //PrintArray(mas2);
             Console.WriteLine();
             Console.WriteLine("Пузырьковая сортировка");
             timer.Start();
-            BubleSort(mas1);
+            BubleSort(mas3);
             timer.Stop();
             Console.WriteLine($"Время выполнения: {timer.Elapsed}");
             timer.Reset();
-            PrintArray(mas1);
+            //PrintArray(mas3);
         }
-        public static void DoBucketSort(int[] array)
-        {
-            if (array == null || array.Length < 2) return;
-            int min = array[0];
-            int max = array[0];
-            bool is_sorted = true;
-            for (int i = 1; i < array.Length; i++)
-            {
-                if (array[i] < min) min = array[i];
-                if (array[i] > max) max = array[i];
-                if (array[i] < array[i - 1]) is_sorted = false;
-            }
-            if (is_sorted) return;
-            //List<int>[] bucket = new List<int>[max - min + 1];
-            List<int>[] bucket = new List<int>[max % 10 + 1];
-            for (int i = 0; i < bucket.Length; i++)
-            {
-                bucket[i] = new List<int>();
-            }
-            for (int i = 0; i < array.Length; i++)
-            {
-                bucket[array[i] % 10].Add(array[i]);
-            }
-            int n = 0;
-            for (int i = 0; i < bucket.Length; i++)
-            {
-                if (bucket[i].Count > 0)
-                {
-                    for (int j = 0; j < bucket[i].Count; j++)
-                    {
-                        array[n] = bucket[i][j];
-                        n++;
-                    }
-                }
-            }
-        }
+       
         static void BubleSort(int [] array)
         {
             for (int i = 0; i < array.Length-1; i++)
@@ -89,9 +77,11 @@ namespace HomeWorkGB
                 int n = 0;
                 for (int j = 0; j < array.Length-1; j++)
                 {
-                    if(array[i]>array[i+1])
+                    if(array[j]>array[j+1])
                     {
-                        (array[i], array[i + 1]) = (array[i + 1], array[i]);
+                        int temp = array[j];
+                        array[j] = array[j + 1];
+                        array[j + 1] = temp;
                         n = 1;
                     }
                 }
