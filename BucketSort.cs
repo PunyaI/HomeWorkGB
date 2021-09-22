@@ -8,8 +8,9 @@ namespace HomeWorkGB
 {
     public class BucketSort
     {
-        public static void Sort(int[] A)
+        public static void SortAuto(int[] A)
         {
+            Console.WriteLine("BUCKET_AUTO");
             if (A == null || A.Length < 2) return; //Блок проверок на необходимость сортировки и поиск максимального и минимального значения
             int min = A[0];
             int max = A[0];
@@ -23,7 +24,7 @@ namespace HomeWorkGB
             if (is_sorted) return;
             max++;
 
-            int n = max/3;
+            int n = (max-min)/10;
             List<int>[] buckets = new List<int>[n]; //инициализируем массив с корзинами (списками)
             for (int i = 0; i < n; i++)
             {  
@@ -38,7 +39,7 @@ namespace HomeWorkGB
             
             for (int i = 0; i < n; i++)              //сортируем корзины
             {
-                NextSort(buckets[i]);
+                    buckets[i].Sort();
             }
             int position = 0;
             for (int i = 0; i < n; i++)            //объединяем наши корзины в массиве для сортировки
@@ -68,10 +69,9 @@ namespace HomeWorkGB
                     break;
             }
         }
-
-
-        public static void Sort(int[] A, bool auto)
+        public static void Sort(int[] A)
         {
+            Console.WriteLine("BUCKET_BUBLE");
             if (A == null || A.Length < 2) return; //Блок проверок на необходимость сортировки и поиск максимального и минимального значения
             int min = A[0];
             int max = A[0];
@@ -85,7 +85,7 @@ namespace HomeWorkGB
             if (is_sorted) return;
             max++;
 
-            int n = max / 3;
+            int n = (max - min) / 10;
             List<int>[] buckets = new List<int>[n]; //инициализируем массив с корзинами (списками)
             for (int i = 0; i < n; i++)
             {
@@ -100,7 +100,7 @@ namespace HomeWorkGB
 
             for (int i = 0; i < n; i++)              //сортируем корзины
             {
-                buckets[i].Sort();
+                    NextSort(buckets[i]);
             }
             int position = 0;
             for (int i = 0; i < n; i++)            //объединяем наши корзины в массиве для сортировки

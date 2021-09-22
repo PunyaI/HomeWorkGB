@@ -10,6 +10,7 @@ namespace HomeWorkGB
     {
         public static void Sort(int[] A)
         {
+            Console.WriteLine("COUNT");
             if (A == null || A.Length < 2) return;  //Блок проверок на необходимость сортировки и поиск максимального и минимального значения
             int min = A[0];
             int max = A[0];
