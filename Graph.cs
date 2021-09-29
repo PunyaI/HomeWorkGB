@@ -7,7 +7,6 @@ namespace HomeWorkGB
     {
         void AddVertex(int value); // добавить вершину
         void AddEdge(int value1, int value2, int weight);
-        void RemoveVertex(int value); // удалить вершину по значению
         Vertex GetVertexByValue(int value); //получить вершину графа по значению
         void PrintGraph(); //вывести граф в консоль
     }
@@ -63,45 +62,6 @@ namespace HomeWorkGB
                 }
                 Console.WriteLine();
                 Console.WriteLine();
-            }
-        }
-
-        public void RemoveVertex(int value)
-        {
-            var vertex = GetVertexByValue(value);
-            for (int i = 0; i < vertex.Edges.Count; i++)
-            {
-                if (vertex.Edges[i].Vert1?.Value == value)
-                {
-                    for (int j = 0; j < vertex.Edges[i].Vert2.Edges.Count; j++)
-                    {
-                        if (vertex.Edges[i].Vert1?.Edges[j].Vert1?.Value == value || vertex.Edges[i].Vert1?.Edges[j].Vert2?.Value == value)
-                        {
-                            vertex.Edges[i].Vert1.Edges.RemoveAt(j);
-                        }  
-                    }
-                    vertex.Edges.RemoveAt(i);
-                }
-                if (vertex.Edges[i].Vert2?.Value == value)
-                {
-                    for (int j = 0; j < vertex.Edges[i].Vert1.Edges.Count; j++)
-                    {
-                        if (vertex.Edges[i].Vert2?.Edges[j].Vert1?.Value == value || vertex.Edges[i].Vert2?.Edges[j].Vert2?.Value == value)
-                        {
-                            vertex.Edges[i].Vert2?.Edges.RemoveAt(j);
-                            break;
-                        }
-                    }
-                    vertex.Edges.RemoveAt(i);
-                }
-
-            }
-            for (int i = 0; i < Vertexes.Count; i++)
-            {
-                if (vertex == Vertexes[i])
-                {
-                    Vertexes.RemoveAt(i);
-                }    
             }
         }
     }

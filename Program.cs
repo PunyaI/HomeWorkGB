@@ -9,7 +9,7 @@ namespace HomeWorkGB
     class Program
     {
 
-
+        delegate Vertex DFSandBFS(Graph a, int b);
         static void Main(string[] args)
         {
             var graph = new Graph(7);
@@ -26,28 +26,29 @@ namespace HomeWorkGB
             graph.PrintGraph();
             int search = 6;
             Console.WriteLine();
-            Console.WriteLine("                          Поиск в графе в ширину");
-            Console.WriteLine();
-            var res = BFS(graph, search);
-            Console.WriteLine();
-            Console.WriteLine($"Результат поиска вершины со значением {search} - {res.Value}");
-            Console.WriteLine();
-            Console.WriteLine();
 
-            Console.WriteLine("                          Поиск в графе в глубину");
-            Console.WriteLine();
-            var res2 = DFS(graph, search);
-            Console.WriteLine();
-            Console.WriteLine($"Результат поиска вершины со значением {search} - {res2.Value}");
-
-            //Console.WriteLine();
-            //Console.WriteLine("Удаляем элемент со значением 6");
-            //graph.RemoveVertex(6);
-            //graph.PrintGraph();
+            DFSandBFS do_search = BFS;
+            Test(graph, do_search, search, ConsoleColor.Green);
+            do_search = DFS;
+            Test(graph, do_search, search, ConsoleColor.Red);
         }
 
+        static void Test(Graph graph, DFSandBFS do_search, int value, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            var res = do_search(graph, value);
+            Console.WriteLine();
+            Console.WriteLine($"Результат поиска вершины со значением {value} - {res.Value}");
+            Console.ResetColor();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+        }
         static Vertex BFS(Graph graph, int search_value)
         {
+            Console.WriteLine("                          Поиск в графе в ширину");
+            Console.WriteLine();
             Queue<Vertex> q = new Queue<Vertex>();
             Vertex vertex;
             HashSet<Vertex> used = new HashSet<Vertex>();         //запоминаем какие вершины уже прошли
@@ -88,6 +89,8 @@ namespace HomeWorkGB
    
         static Vertex DFS(Graph graph, int search_value)
         {
+            Console.WriteLine("                          Поиск в графе в глубину");
+            Console.WriteLine();
             Stack<Vertex> s = new Stack<Vertex>();
             Vertex vertex;
             HashSet<Vertex> used = new HashSet<Vertex>();         //запоминаем какие вершины уже прошли
