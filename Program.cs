@@ -1,141 +1,98 @@
 ﻿using System;
 
-
 namespace HomeWorkGB
 {
     class Program
     {
-        public interface ILinkedList
-        {
-            int GetCount(); // возвращает количество элементов в списке
-            void AddNode(int value);  // добавляет новый элемент списка
-            void AddNodeAfter(Node node, int value); // добавляет новый элемент списка после определённого элемента
-            void RemoveNode(int index); // удаляет элемент по порядковому номеру
-            void RemoveNode(Node node); // удаляет указанный элемент
-            Node FindNode(int searchValue); // ищет элемент по его значению
-        }
 
         static void Main(string[] args)
         {
-            Case1_DoubleNodeList();
+            while (true)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("             Поиск количества путей для прямоугольного поля");
+                Console.ResetColor();
+                Console.WriteLine();
+                var place = InputPlacement();
+                SumOfPaths(place.Item1, place.Item2);
+                if (NextOrExit())
+                    break;
+                Console.Clear();
+            }
 
-            Console.WriteLine();
-            Console.WriteLine("                   Задание №2");
-            Console.WriteLine();
-            int[] array = { 2, 4, 5, 7, 9, 11, 15, 18, 23, 29, 32, 33, 36, 39, 40, 42, 44, 59, 89, 90 };
-            int[] array2 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
-            var testcase1 = new TestCase()
-            {
-                input = array,
-                inputsearch = 4,
-                expected = 1,
-                expectedException = null
-            };
-            var testcase2 = new TestCase()
-            {
-                input = array,
-                inputsearch = 89,
-                expected = 18,
-                expectedException = null
-            };
-            var testcase3 = new TestCase()
-            {
-                input = array2,
-                inputsearch = 9,
-                expected = 8,
-                expectedException = null
-            };
-            var testcase4 = new TestCase()
-            {
-                input = array2,
-                inputsearch = 20,
-                expected = 19,
-                expectedException = null
-            };
-            var testcase5 = new TestCase()
-            {
-                input = array,
-                inputsearch = -1,
-                expected = 32,
-                expectedException = new ArgumentException()
-        };
-
-            TestCase.Test(testcase1);
-            TestCase.Test(testcase2);
-            TestCase.Test(testcase3);
-            TestCase.Test(testcase4);
-            TestCase.Test(testcase5);
         }
 
 
-        public static int BinarySearch(int[] array, int search_value)
+        static void SumOfPaths(int A, int B)
         {
-            if (search_value == -1)
+            int[,] mas = new int[A, B];
+            int i, j;
+            for (i = 0; i < B; i++)
+                mas[0, i] = 1;           
+            for (i = 1; i < A; i++)
             {
-                throw new ArgumentException("Ошибка, некорректное значение");
+                mas[i, 0] = 1;
+                for (j = 1; j < B; j++)
+                    mas[i, j] = mas[i, j - 1] + mas[i - 1, j];
             }
-            int min = 0;
-            int max = array.Length - 1;
-            while (min <= max)
+
+            PrintPaths(mas);
+        }
+        static void PrintPaths(int[,] mas)
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"От левой верхней клетки до правой нижней есть {mas[mas.GetLength(0) - 1, mas.GetLength(1) - 1]} вариантов пути. ");
+            Console.WriteLine();
+            Console.ResetColor();
+            Console.WriteLine("Таблица количества путей до каждой клетки поля: ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            int i, j;
+            Console.WriteLine();
+            for (i = 0; i < mas.GetLength(0); i++)
             {
-                int mid = (min + max) / 2;
-                if (search_value == array[mid])
+                for (j = 0; j < mas.GetLength(1); j++)
                 {
-                    return mid;
+                    if (mas[i, j] < 10)
+                        Console.Write(mas[i, j] + "   ");
+                    else if ((mas[i, j] < 100))
+                        Console.Write(mas[i, j] + "  ");
+                    else
+                        Console.Write(mas[i, j] + " ");
+
                 }
-                else if (search_value < array[mid])
-                {
-                    max = mid - 1;
-                }
-                else
-                {
-                    min = mid + 1;
-                }
+                Console.WriteLine();
+                Console.WriteLine();
             }
-            return -1;
+            Console.ResetColor();
+        }
+        static (int a, int b) InputPlacement()
+        {
+            int a, b;
+            Console.WriteLine("Введите ширину поля");
+            while (!Int32.TryParse(Console.ReadLine(), out b))
+                Console.WriteLine("Ошибка ввода! Введите целочисленное значение ширины поля");
+            Console.WriteLine("Введите высоту поля");
+            while (!Int32.TryParse(Console.ReadLine(), out a))
+                Console.WriteLine("Ошибка ввода! Введите целочисленное значение длины поля");
+            return (a, b);
         }
 
-        static void Case1_DoubleNodeList()
+        static bool NextOrExit()
         {
-            Console.WriteLine("                   Задание №1");
-            Console.WriteLine();
-            NodeList nodelist = new NodeList();
-            Console.WriteLine("Добавляем в список элементы со значениями 2, 4, 6, 10");
-            nodelist.AddNode(2);
-            nodelist.AddNode(4);
-            nodelist.AddNode(6);
-            nodelist.AddNode(10);
-            Console.WriteLine("Элементы двусвязного списка:");
-            foreach (var item in nodelist)
-            {
-                Console.Write(item + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine($"В списке {nodelist.GetCount()} элементов(а).");
-            Console.WriteLine("Добавляем запись, находящуюся после записи со значением 6");
-            nodelist.AddNodeAfter(nodelist.FindNode(6), 8);
-            foreach (var item in nodelist)
-            {
-                Console.Write(item + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine("Удаляем запись с индексом 3");
-            nodelist.RemoveNode(3);
-            foreach (var item in nodelist)
-            {
-                Console.Write(item + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine("Удаляем запись со значением 4 (найденную с помощью поиска)");
-            nodelist.RemoveNode(nodelist.FindNode(4));
-            foreach (var item in nodelist)
-            {
-                Console.Write(item + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine();
+            Console.Write("Нажмите ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("Enter");
+            Console.ResetColor();
+            Console.Write(", чтобы продолжить или ");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("Esc");
+            Console.ResetColor();
+            Console.Write(", чтобы выйти");
+            if (Console.ReadKey().Key == ConsoleKey.Escape)
+                return true;
+            return false;
         }
     }
-        
-    }
+}
 
