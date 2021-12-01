@@ -1,141 +1,135 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
 
 namespace HomeWorkGB
 {
+
     class Program
     {
-        public interface ILinkedList
-        {
-            int GetCount(); // возвращает количество элементов в списке
-            void AddNode(int value);  // добавляет новый элемент списка
-            void AddNodeAfter(Node node, int value); // добавляет новый элемент списка после определённого элемента
-            void RemoveNode(int index); // удаляет элемент по порядковому номеру
-            void RemoveNode(Node node); // удаляет указанный элемент
-            Node FindNode(int searchValue); // ищет элемент по его значению
-        }
 
+        delegate Vertex DFSandBFS(Graph a, int b);
         static void Main(string[] args)
         {
-            Case1_DoubleNodeList();
-
+            var graph = new Graph(7);
+            graph.AddEdge(1, 2, 1);
+            graph.AddEdge(2, 3, 3);
+            graph.AddEdge(2, 4, 2);
+            graph.AddEdge(2, 5, 1);
+            graph.AddEdge(3, 4, 1);
+            graph.AddEdge(3, 5, 4);
+            graph.AddEdge(4, 1, 2);
+            graph.AddEdge(4, 5, 2);
+            graph.AddEdge(5, 6, 3);
+            graph.AddEdge(7, 4, 1);
+            graph.PrintGraph();
+            int search = 6;
             Console.WriteLine();
-            Console.WriteLine("                   Задание №2");
-            Console.WriteLine();
-            int[] array = { 2, 4, 5, 7, 9, 11, 15, 18, 23, 29, 32, 33, 36, 39, 40, 42, 44, 59, 89, 90 };
-            int[] array2 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
-            var testcase1 = new TestCase()
-            {
-                input = array,
-                inputsearch = 4,
-                expected = 1,
-                expectedException = null
-            };
-            var testcase2 = new TestCase()
-            {
-                input = array,
-                inputsearch = 89,
-                expected = 18,
-                expectedException = null
-            };
-            var testcase3 = new TestCase()
-            {
-                input = array2,
-                inputsearch = 9,
-                expected = 8,
-                expectedException = null
-            };
-            var testcase4 = new TestCase()
-            {
-                input = array2,
-                inputsearch = 20,
-                expected = 19,
-                expectedException = null
-            };
-            var testcase5 = new TestCase()
-            {
-                input = array,
-                inputsearch = -1,
-                expected = 32,
-                expectedException = new ArgumentException()
-        };
 
-            TestCase.Test(testcase1);
-            TestCase.Test(testcase2);
-            TestCase.Test(testcase3);
-            TestCase.Test(testcase4);
-            TestCase.Test(testcase5);
+            DFSandBFS do_search = BFS;
+            Test(graph, do_search, search, ConsoleColor.Green);
+            do_search = DFS;
+            Test(graph, do_search, search, ConsoleColor.Red);
         }
 
-
-        public static int BinarySearch(int[] array, int search_value)
+        static void Test(Graph graph, DFSandBFS do_search, int value, ConsoleColor color)
         {
-            if (search_value == -1)
+            Console.ForegroundColor = color;
+            var res = do_search(graph, value);
+            Console.WriteLine();
+            Console.WriteLine($"Результат поиска вершины со значением {value} - {res.Value}");
+            Console.ResetColor();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+        }
+        static Vertex BFS(Graph graph, int search_value)
+        {
+            Console.WriteLine("                          Поиск в графе в ширину");
+            Console.WriteLine();
+            Queue<Vertex> q = new Queue<Vertex>();
+            Vertex vertex;
+            HashSet<Vertex> used = new HashSet<Vertex>();         //запоминаем какие вершины уже прошли
+            used.Add(graph.Vertexes[0]);
+            q.Enqueue(graph.Vertexes[0]);
+            Console.WriteLine("Добавляем в очередь первую вершину со значением " + graph.Vertexes[0].Value);
+            while(q.Count!=0)
             {
-                throw new ArgumentException("Ошибка, некорректное значение");
+
+                vertex = q.Dequeue();
+                used.Add(vertex);
+                Console.WriteLine("Удаляем из очереди вершину со значением " + vertex.Value);
+                if (vertex.Value == search_value)
+                {
+                    Console.WriteLine("Мы нашли искомую вершину со значением -  " + vertex.Value);
+                    return vertex;
+                }
+                for (int i = 0; i < vertex.Edges.Count; i++)
+                {
+                    if (!used.Contains(vertex.Edges[i].Vert1))
+                    {
+                        Console.WriteLine("Добавляем в очередь ещё не помеченную связанную вершину со значением -  " + vertex.Edges[i].Vert1.Value);
+                        used.Add(vertex.Edges[i].Vert1);
+                        q.Enqueue(vertex.Edges[i].Vert1);
+                    }
+                    if(!used.Contains(vertex.Edges[i].Vert2))
+                    {
+                        Console.WriteLine("Добавляем в очередь ещё не помеченную связанную вершину со значением -  " + vertex.Edges[i].Vert2.Value);
+                        used.Add(vertex.Edges[i].Vert2);
+                        q.Enqueue(vertex.Edges[i].Vert2);
+                    }  
+                }
             }
-            int min = 0;
-            int max = array.Length - 1;
-            while (min <= max)
+            vertex = null;
+            Console.WriteLine("Вершины с таким значением не найдено");
+            return vertex;
+        }
+   
+        static Vertex DFS(Graph graph, int search_value)
+        {
+            Console.WriteLine("                          Поиск в графе в глубину");
+            Console.WriteLine();
+            Stack<Vertex> s = new Stack<Vertex>();
+            Vertex vertex;
+            HashSet<Vertex> used = new HashSet<Vertex>();         //запоминаем какие вершины уже прошли
+            used.Add(graph.Vertexes[0]);
+            s.Push(graph.Vertexes[0]);
+            Console.WriteLine("Добавляем в стек первую вершину со значением " + graph.Vertexes[0].Value);
+            while (s.Count!=0)
             {
-                int mid = (min + max) / 2;
-                if (search_value == array[mid])
+                vertex = s.Pop();
+                Console.WriteLine("Вынимаем из стека вершину со значением " + vertex.Value);
+                used.Add(vertex);
+                if (vertex.Value == search_value)
                 {
-                    return mid;
+                    Console.WriteLine("Мы нашли искомую вершину со значением -  " + vertex.Value);
+                    return vertex;
                 }
-                else if (search_value < array[mid])
+
+                for (int i = 0; i < vertex.Edges.Count; i++)
                 {
-                    max = mid - 1;
-                }
-                else
-                {
-                    min = mid + 1;
+                    if (!used.Contains(vertex.Edges[i].Vert1))
+                    {
+                        Console.WriteLine("Добавляем в стек ещё не помеченную связанную вершину со значением -  " + vertex.Edges[i].Vert1.Value);
+                        used.Add(vertex.Edges[i].Vert1);
+                        s.Push(vertex.Edges[i].Vert1);
+                    }
+                    if (!used.Contains(vertex.Edges[i].Vert2))
+                    {
+                        Console.WriteLine("Добавляем в стек ещё не помеченную связанную вершину со значением -  " + vertex.Edges[i].Vert2.Value);
+                        used.Add(vertex.Edges[i].Vert2);
+                        s.Push(vertex.Edges[i].Vert2);
+                    }
                 }
             }
-            return -1;
+            Console.WriteLine("Вершины с таким значением не найдено");
+            vertex = null;
+            return vertex;
         }
 
-        static void Case1_DoubleNodeList()
-        {
-            Console.WriteLine("                   Задание №1");
-            Console.WriteLine();
-            NodeList nodelist = new NodeList();
-            Console.WriteLine("Добавляем в список элементы со значениями 2, 4, 6, 10");
-            nodelist.AddNode(2);
-            nodelist.AddNode(4);
-            nodelist.AddNode(6);
-            nodelist.AddNode(10);
-            Console.WriteLine("Элементы двусвязного списка:");
-            foreach (var item in nodelist)
-            {
-                Console.Write(item + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine($"В списке {nodelist.GetCount()} элементов(а).");
-            Console.WriteLine("Добавляем запись, находящуюся после записи со значением 6");
-            nodelist.AddNodeAfter(nodelist.FindNode(6), 8);
-            foreach (var item in nodelist)
-            {
-                Console.Write(item + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine("Удаляем запись с индексом 3");
-            nodelist.RemoveNode(3);
-            foreach (var item in nodelist)
-            {
-                Console.Write(item + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine("Удаляем запись со значением 4 (найденную с помощью поиска)");
-            nodelist.RemoveNode(nodelist.FindNode(4));
-            foreach (var item in nodelist)
-            {
-                Console.Write(item + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine();
-        }
     }
-        
-    }
+
+}
 
