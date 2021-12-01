@@ -1,139 +1,143 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
 
 namespace HomeWorkGB
 {
+    
     class Program
     {
-        public interface ILinkedList
-        {
-            int GetCount(); // возвращает количество элементов в списке
-            void AddNode(int value);  // добавляет новый элемент списка
-            void AddNodeAfter(Node node, int value); // добавляет новый элемент списка после определённого элемента
-            void RemoveNode(int index); // удаляет элемент по порядковому номеру
-            void RemoveNode(Node node); // удаляет указанный элемент
-            Node FindNode(int searchValue); // ищет элемент по его значению
-        }
-
+       
         static void Main(string[] args)
         {
-            Case1_DoubleNodeList();
 
+            Console.WriteLine("                Задание № 1");
             Console.WriteLine();
-            Console.WriteLine("                   Задание №2");
+            TaskStrings(10000);
             Console.WriteLine();
-            int[] array = { 2, 4, 5, 7, 9, 11, 15, 18, 23, 29, 32, 33, 36, 39, 40, 42, 44, 59, 89, 90 };
-            int[] array2 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
-            var testcase1 = new TestCase()
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("                Задание № 2");
+            Console.WriteLine();
+            TaskTree();
+        }
+        public static void TaskStrings(int count)
+        {
+            var strings = RandomStrings(count);
+            var hashset = new HashSet<string>();
+            string test = "test";
+            for (int i = 0; i < count; i++)
             {
-                input = array,
-                inputsearch = 4,
-                expected = 1,
-                expectedException = null
-            };
-            var testcase2 = new TestCase()
-            {
-                input = array,
-                inputsearch = 89,
-                expected = 18,
-                expectedException = null
-            };
-            var testcase3 = new TestCase()
-            {
-                input = array2,
-                inputsearch = 9,
-                expected = 8,
-                expectedException = null
-            };
-            var testcase4 = new TestCase()
-            {
-                input = array2,
-                inputsearch = 20,
-                expected = 19,
-                expectedException = null
-            };
-            var testcase5 = new TestCase()
-            {
-                input = array,
-                inputsearch = -1,
-                expected = 32,
-                expectedException = new ArgumentException()
-        };
+                hashset.Add(strings[i]);
+            }
+            var timer = new Stopwatch();
+            timer.Start();
+            bool check = hashset.Contains(test);
+            timer.Stop();
+            Console.WriteLine($"Время поиска в HashSet: {timer.Elapsed}");
+            if (check)
 
-            TestCase.Test(testcase1);
-            TestCase.Test(testcase2);
-            TestCase.Test(testcase3);
-            TestCase.Test(testcase4);
-            TestCase.Test(testcase5);
+            {
+                Console.WriteLine($"Элемент '{test}' найден в HashSet");
+            }
+            else
+            {
+                Console.WriteLine($"Элемент '{test}' не найден в HashSet");
+            }
+
+
+            timer.Reset();
+            var array = strings;
+            check = true;
+            timer.Start();
+            for (int i = 0; i < count; i++)
+            {
+                if (array[i] == test)
+                {
+                    Console.WriteLine($"Элемент '{array[i]}' найден в массиве");
+                    check = false;
+                    break;
+                }
+            }
+            timer.Stop();
+            Console.WriteLine($"Время поиска в массиве: {timer.Elapsed}");
+            if (check)
+            {
+                Console.WriteLine($"Элемент '{test}' не найден в массиве.");
+            }
         }
 
 
-        public static int BinarySearch(int[] array, int search_value)
+
+        public static void TaskTree()
         {
-            if (search_value == -1)
+            var tree = new Tree(15);
+            Console.WriteLine("Строим дерево с корнем 15");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(), 0);
+            Console.WriteLine();
+            Console.WriteLine("Добавляем в дерево значения кратные 3 (3, 6, 9, ..., 42)" );
+            for (int i = 1; i < 15; i++)              
             {
-                throw new ArgumentException("Ошибка, некорректное значение");
+                tree.AddItem(i * 3);
             }
-            int min = 0;
-            int max = array.Length - 1;
-            while (min <= max)
-            {
-                int mid = (min + max) / 2;
-                if (search_value == array[mid])
-                {
-                    return mid;
-                }
-                else if (search_value < array[mid])
-                {
-                    max = mid - 1;
-                }
-                else
-                {
-                    min = mid + 1;
-                }
-            }
-            return -1;
+            Console.WriteLine("Теперь дерево выглядит так:");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(), 0); 
+            Console.WriteLine();
+            int search = 27;
+            var res = tree.GetNodeByValue(search);
+            Console.WriteLine($"Результат поиска элемента со значением {search} -   L: {res.LeftChild?.Value}    P: {res.Parent?.Value}       R {res.RightChild?.Value}               Value {res.Value}");
+            tree.RemoveItem(9);
+            Console.WriteLine("Удаляем элемент со значением 9 (вместо со всеми его 'детьми')");
+            Console.WriteLine("Теперь дерево выглядит так:");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(), 0);
+            Console.WriteLine();
+            tree.AddItem(233);
+            Console.WriteLine("Добавляем элемент 233");
+            Console.WriteLine("Теперь дерево выглядит так:");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(), 0);
+            Console.WriteLine();
+            tree.AddItem(234);
+            Console.WriteLine("Добавляем элемент 234");
+            Console.WriteLine("Теперь дерево выглядит так:");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(), 0);
+            Console.WriteLine();
+            tree.AddItem(235);
+            Console.WriteLine("Добавляем элемент 234");
+            Console.WriteLine("Теперь дерево выглядит так:");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(), 0);
+            Console.WriteLine();
+            tree.AddItem(239);
+            Console.WriteLine("Добавляем элемент 239");
+            Console.WriteLine("Теперь дерево выглядит так:");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(), 0);
         }
 
-        static void Case1_DoubleNodeList()
+
+        public static string[] RandomStrings(int count)
         {
-            Console.WriteLine("                   Задание №1");
-            Console.WriteLine();
-            NodeList nodelist = new NodeList();
-            Console.WriteLine("Добавляем в список элементы со значениями 2, 4, 6, 10");
-            nodelist.AddNode(2);
-            nodelist.AddNode(4);
-            nodelist.AddNode(6);
-            nodelist.AddNode(10);
-            Console.WriteLine("Элементы двусвязного списка:");
-            foreach (var item in nodelist)
+            var result = new string[count];
+            var r = new Random();
+            for (int i = 0; i < result.Length; i++)
             {
-                Console.Write(item + " ");
+                var length = r.Next(0, 15);
+                var str = new StringBuilder(length);
+                while (length > 0)
+                {
+                    str.Append((char)r.Next(0, 256));
+                    length--;
+                }
+                result[i] = str.ToString();
             }
-            Console.WriteLine();
-            Console.WriteLine($"В списке {nodelist.GetCount()} элементов(а).");
-            Console.WriteLine("Добавляем запись, находящуюся после записи со значением 6");
-            nodelist.AddNodeAfter(nodelist.FindNode(6), 8);
-            foreach (var item in nodelist)
-            {
-                Console.Write(item + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine("Удаляем запись с индексом 3");
-            nodelist.RemoveNode(3);
-            foreach (var item in nodelist)
-            {
-                Console.Write(item + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine("Удаляем запись со значением 4 (найденную с помощью поиска)");
-            nodelist.RemoveNode(nodelist.FindNode(4));
-            foreach (var item in nodelist)
-            {
-                Console.Write(item + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine();
+            result[count - 1] = "test";
+            return result;
         }
     }
         
