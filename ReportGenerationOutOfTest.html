@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>HomeWorkGB.BechmarkClass-20210905-215952</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.13.1, OS=Windows 10.0.19041.1165 (2004/May2020Update/20H1)
+AMD Ryzen 5 2600, 1 CPU, 12 logical and 6 physical cores
+  [Host]     : .NET Framework 4.8 (4.8.4400.0), X86 LegacyJIT
+  DefaultJob : .NET Framework 4.8 (4.8.4400.0), X86 LegacyJIT
+</code></pre>
+<pre><code></code></pre>
+
+<table>
+<thead><tr><th>                               Method</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Max</th><th>Min</th>
+</tr>
+</thead><tbody><tr><td>&#39;Класс Point и тип данных Float&#39;</td><td>45.527 ns</td><td>0.8610 ns</td><td>0.8054 ns</td><td>47.093 ns</td><td>44.500 ns</td>
+</tr><tr><td>&#39;Структура Point и тип данных Float&#39;</td><td>55.586 ns</td><td>1.1398 ns</td><td>1.7060 ns</td><td>59.942 ns</td><td>53.477 ns</td>
+</tr><tr><td>&#39;Структура Point и тип данных Double&#39;</td><td>8.565 ns</td><td>0.0685 ns</td><td>0.0572 ns</td><td>8.688 ns</td><td>8.513 ns</td>
+</tr><tr><td>&#39;Структура Point тип данных Float без Sqrt&#39;</td><td>27.717 ns</td><td>0.2765 ns</td><td>0.2309 ns</td><td>28.126 ns</td><td>27.392 ns</td>
+</tr></tbody></table>
+</body>
+</html>
