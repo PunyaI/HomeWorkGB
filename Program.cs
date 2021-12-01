@@ -1,141 +1,172 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
 
 namespace HomeWorkGB
 {
+    
     class Program
     {
-        public interface ILinkedList
-        {
-            int GetCount(); // возвращает количество элементов в списке
-            void AddNode(int value);  // добавляет новый элемент списка
-            void AddNodeAfter(Node node, int value); // добавляет новый элемент списка после определённого элемента
-            void RemoveNode(int index); // удаляет элемент по порядковому номеру
-            void RemoveNode(Node node); // удаляет указанный элемент
-            Node FindNode(int searchValue); // ищет элемент по его значению
-        }
-
+       
         static void Main(string[] args)
         {
-            Case1_DoubleNodeList();
+            var tree = new Tree(20);
+            for (int i = 0; i < 15; i++)
+            {
+                tree.AddItem(i * 5);
+            }
+            Console.WriteLine("            Наше дерево: ");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(),0);
+            Console.WriteLine();
+            int search_value = 45;
+            Console.WriteLine();
+            Console.WriteLine("                           Поиск в ширину");
+            Console.WriteLine();
+            Console.WriteLine("               Сначала добавляем в очередь корень дерева.");
+            Console.WriteLine("    Затем вытаскиваем из начала очереди элемент, сравниваем его с искомым, ");
+            Console.WriteLine("         если не он - добавляем в конец очереди детей этого элемента.");
+            Console.WriteLine("            Повторяем, пока не найдём или не обойдём всё дерево.");
+            Console.WriteLine();
+            Console.WriteLine("Ниже изменения очереди на каждой итерации:");
+            var res = BFS(tree, search_value);
+            Console.WriteLine();
+            Console.WriteLine("Как видим по наполнению очереди последовательные элементы в ней идут с одного уровня глубины, ");
+            Console.WriteLine("то есть действительно обход дерева в ширину. ");
 
             Console.WriteLine();
-            Console.WriteLine("                   Задание №2");
             Console.WriteLine();
-            int[] array = { 2, 4, 5, 7, 9, 11, 15, 18, 23, 29, 32, 33, 36, 39, 40, 42, 44, 59, 89, 90 };
-            int[] array2 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
-            var testcase1 = new TestCase()
-            {
-                input = array,
-                inputsearch = 4,
-                expected = 1,
-                expectedException = null
-            };
-            var testcase2 = new TestCase()
-            {
-                input = array,
-                inputsearch = 89,
-                expected = 18,
-                expectedException = null
-            };
-            var testcase3 = new TestCase()
-            {
-                input = array2,
-                inputsearch = 9,
-                expected = 8,
-                expectedException = null
-            };
-            var testcase4 = new TestCase()
-            {
-                input = array2,
-                inputsearch = 20,
-                expected = 19,
-                expectedException = null
-            };
-            var testcase5 = new TestCase()
-            {
-                input = array,
-                inputsearch = -1,
-                expected = 32,
-                expectedException = new ArgumentException()
-        };
-
-            TestCase.Test(testcase1);
-            TestCase.Test(testcase2);
-            TestCase.Test(testcase3);
-            TestCase.Test(testcase4);
-            TestCase.Test(testcase5);
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("            Наше дерево: ");
+            Console.WriteLine();
+            tree.PrintTree(tree.GetRoot(), 0);
+            Console.WriteLine();
+            Console.WriteLine("Поиск в глубину");
+            Console.WriteLine();
+            Console.WriteLine("                 Сначала добавляем в стек корень дерева.");
+            Console.WriteLine("      Затем вытаскиваем из конца стека элемент, сравниваем его с искомым, ");
+            Console.WriteLine("          если не он - добавляем в конец стека детей этого элемента.");
+            Console.WriteLine("             Повторяем, пока не найдём или не обойдём всё дерево.");
+            Console.WriteLine();
+            Console.WriteLine("Ниже изменения стека на каждой итерации:");
+            res = DFS(tree, search_value);
+            Console.WriteLine();
+            Console.WriteLine("Как видим по детализации благодаря тому, что берем каждый раз последний положенный элемент ");
+            Console.WriteLine("мы обходим дерево по каждой ветке по очереди на всю глубину. ");
+            Console.WriteLine("То есть это действительно поиск в дереве в глубину ");
         }
-
-
-        public static int BinarySearch(int[] array, int search_value)
+        static void PrintStepQueue(Queue<TreeNode> queue)
         {
-            if (search_value == -1)
+            Console.Write("       ");
+            foreach (var item in queue)
             {
-                throw new ArgumentException("Ошибка, некорректное значение");
+                Console.Write(item.Value + " ");
             }
-            int min = 0;
-            int max = array.Length - 1;
-            while (min <= max)
-            {
-                int mid = (min + max) / 2;
-                if (search_value == array[mid])
-                {
-                    return mid;
-                }
-                else if (search_value < array[mid])
-                {
-                    max = mid - 1;
-                }
-                else
-                {
-                    min = mid + 1;
-                }
-            }
-            return -1;
+            Console.WriteLine();
         }
-
-        static void Case1_DoubleNodeList()
+        static void PrintStepStack(Stack<TreeNode> stack)
         {
-            Console.WriteLine("                   Задание №1");
-            Console.WriteLine();
-            NodeList nodelist = new NodeList();
-            Console.WriteLine("Добавляем в список элементы со значениями 2, 4, 6, 10");
-            nodelist.AddNode(2);
-            nodelist.AddNode(4);
-            nodelist.AddNode(6);
-            nodelist.AddNode(10);
-            Console.WriteLine("Элементы двусвязного списка:");
-            foreach (var item in nodelist)
+            Console.Write("       ");
+            foreach (var item in stack)
             {
-                Console.Write(item + " ");
+                Console.Write(item.Value + " ");
             }
             Console.WriteLine();
-            Console.WriteLine($"В списке {nodelist.GetCount()} элементов(а).");
-            Console.WriteLine("Добавляем запись, находящуюся после записи со значением 6");
-            nodelist.AddNodeAfter(nodelist.FindNode(6), 8);
-            foreach (var item in nodelist)
+        }
+        static TreeNode BFS(Tree tree, int search_value)
+        {
+            int i = 0;
+            Console.WriteLine();
+            var res = new TreeNode();
+            var fail = new TreeNode();
+            var queue = new Queue<TreeNode>();
+            queue.Enqueue(tree.GetRoot()); //обходим дерево в ширину с помощью очереди в поисках нужного значения, если его нет, возвращаем пустой элемент
+            PrintStepQueue(queue);
+            Console.WriteLine();
+            Console.WriteLine($"Сравниваем первый в очереди '{tree.GetRoot().Value}' с искомым '{search_value}', ");
+            Console.WriteLine($"Они не равны, поэтому вытаскиваем его и добавляем в очередь двух его 'детей': {tree.GetRoot().LeftChild.Value} и {tree.GetRoot().RightChild.Value}");
+            Console.WriteLine();
+            while (queue.Count != 0)
             {
-                Console.Write(item + " ");
+                int now = queue.Peek().Value;
+                res = queue.Dequeue();
+                if (res?.Value == search_value)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine($"Сравниваем первый в очереди '{now}' с искомым '{search_value}', ");
+                    Console.WriteLine("Они равны, искомый элемент найден! Возвращаем его значание, прекращаея обход.");
+                    return res;
+                }
+                if (res.LeftChild != null)
+                {
+                    queue.Enqueue(res?.LeftChild);
+                }
+                if (res.RightChild != null)
+                {
+                    queue.Enqueue(res?.RightChild);
+                }
+                if (i != 0)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine($"Сравниваем первый в очереди '{now}' с искомым '{search_value}', ");
+                    Console.WriteLine($"Они не равны, поэтому вытаскиваем его и добавляем в очередь двух его 'детей' (если они есть): {res.LeftChild?.Value} и {res.RightChild?.Value}.");
+                    Console.WriteLine();
+                }
+                PrintStepQueue(queue);
+                i++;
             }
+            Console.WriteLine("Искомый элемент не найден, поэтому возвращаем пустой элемент");
+            return fail;
+        }
+        static TreeNode DFS(Tree tree, int search_value)
+        {
+            int i = 0;
             Console.WriteLine();
-            Console.WriteLine("Удаляем запись с индексом 3");
-            nodelist.RemoveNode(3);
-            foreach (var item in nodelist)
+            var res = new TreeNode();
+            var fail = new TreeNode();
+            var stack = new Stack<TreeNode>();
+            stack.Push(tree.GetRoot());                  //обходим дерево в глубину с помощью стека в поисках нужного значения, если его нет, возвращаем пустой элемент
+            PrintStepStack(stack);
+            Console.WriteLine();
+            Console.WriteLine($"Сравниваем последний в стеке '{tree.GetRoot().Value}' с искомым '{search_value}', ");
+            Console.WriteLine($"Они не равны, поэтому вытаскиваем его и добавляем в стек двух его 'детей': {tree.GetRoot().LeftChild.Value} и {tree.GetRoot().RightChild.Value}");
+            Console.WriteLine();
+            while (stack.Count != 0)
             {
-                Console.Write(item + " ");
+                int now = stack.Peek().Value;
+                res = stack.Pop();
+                if (res?.Value == search_value)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine($"Сравниваем первый в стеке '{now}' с искомым '{search_value}', ");
+                    Console.WriteLine("Они равны, искомый элемент найден! Возвращаем его значание, прекращаея обход.");
+                    return res;
+                }
+                if (res.LeftChild != null)
+                {
+                    stack.Push(res?.LeftChild);
+                }
+                if (res.RightChild != null)
+                {
+                    stack.Push(res?.RightChild);
+                }
+                if (i != 0)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine($"Сравниваем последний в стеке '{now}' с искомым '{search_value}', ");
+                    Console.WriteLine($"Они не равны, поэтому вытаскиваем его и добавляем в стек двух его 'детей' (если они есть): {res.LeftChild?.Value} и {res.RightChild?.Value}.");
+                    Console.WriteLine();
+                }
+                PrintStepStack(stack);
+                i++;
             }
-            Console.WriteLine();
-            Console.WriteLine("Удаляем запись со значением 4 (найденную с помощью поиска)");
-            nodelist.RemoveNode(nodelist.FindNode(4));
-            foreach (var item in nodelist)
-            {
-                Console.Write(item + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine();
+            Console.WriteLine("Искомый элемент не найден, поэтому возвращаем пустой элемент");
+            return fail;
         }
     }
         
-    }
+}
 
