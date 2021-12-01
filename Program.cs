@@ -1,4 +1,6 @@
 ﻿using HomeWorkGB;
+using System.Diagnostics;
+using System.Text;
 
 namespace HomeWorkGeekBrains
 {
@@ -13,74 +15,97 @@ namespace HomeWorkGeekBrains
     {
         static void Main(string[] args)
         {
+            Task1();
+            Task2();
 
-            //Задание №1
+
+        }
+        static string ReverseString(string source)
+        {
+            StringBuilder temp = new StringBuilder(source.Length);
+            for (int i = source.Length - 1; i >=0; i--)
+            {
+                temp.Append(source[i]);
+            }
+            return temp.ToString(); 
+        }
+        static string ReverseStringFast(string source)
+        {
+            char[] array = source.ToCharArray();
+            Array.Reverse(array);
+            return new string(array);
+        }
+        static void Task1()
+        {
             Console.WriteLine("Задание №1");
-            BankAccountTask1 bank = new();
-            bank.SetNumber(333);
-            bank.SetBalance(2000);
-            bank.SetType(TypeAccount.Дебетовый);
-            bank.GetInfo();
+            Console.WriteLine();
+            BankAccount accountSender = new(600, TypeAccount.Дебетовый);
+            BankAccount accountPayee = new(TypeAccount.Дебетовый);
+            Console.WriteLine("Инфо о счёте отправителя");
+            accountSender.GetInfo();
+            Console.WriteLine();
+            Console.WriteLine("Инфо о счёте получателя");
+            accountPayee.GetInfo();
+            Console.WriteLine("Переводим 700 у.е. с первого аккаунта, на второй.");
+            accountPayee.Transaction(accountSender, 700);
+            Console.WriteLine("Инфо о счёте отправителя");
+            accountSender.GetInfo();
+            Console.WriteLine();
+            Console.WriteLine("Инфо о счёте получателя");
+            accountPayee.GetInfo();
+            Console.WriteLine("Как видим средств было недостаточно для перевода, балансы счетов не изменились");
+            Console.WriteLine("Переводим 400 у.е. с первого аккаунта, на второй.");
+            accountPayee.Transaction(accountSender, 400);
+            Console.WriteLine("Инфо о счёте отправителя");
+            accountSender.GetInfo();
+            Console.WriteLine();
+            Console.WriteLine("Инфо о счёте получателя");
+            accountPayee.GetInfo();
+            Console.WriteLine("Теперь же всё отработало корректно");
             Console.WriteLine();
             Console.WriteLine();
-
-
-            //Задание №2
+            Console.WriteLine();
+        }
+        static void Task2()
+        {
             Console.WriteLine("Задание №2");
-            BankAccountTask2 bank2 = new();
-            BankAccountTask2 bank22 = new();
-            bank2.SetNumber();
-            bank22.SetNumber();
-            bank2.SetBalance(2000);
-            bank2.SetType(TypeAccount.Дебетовый);
-            bank2.GetInfo();
-            bank22.GetInfo();
             Console.WriteLine();
+            string exampleShort = "123456789";
+            char[] temp = new char[5000];
+            Random random = new Random();
+            for (int i = 0; i < 5000; i++)
+            {
+                temp[i] += (char)random.Next(0, 127);
+            }
+            string exampleLong = new string(temp);
+            Console.WriteLine("Проверяем на короткой строке корректности работы алгоритмов");
             Console.WriteLine();
-
-            //Задание №3
-            Console.WriteLine("Задание №3");
-            BankAccountTask3 bank3 = new();
-            BankAccountTask3 bank33 = new(5000);
-            BankAccountTask3 bank333 = new(TypeAccount.Дебетовый);
-            BankAccountTask3 bank3333 = new(7600, TypeAccount.Кредитовый);
-            Console.WriteLine("Конструктор по-умолчанию");
-            bank3.GetInfo();
-            Console.WriteLine("Конструктор с 1 аргументом decimal");
-            bank33.GetInfo();
-            Console.WriteLine("Конструктор с 1 аргументом TypeAccount");
-            bank333.GetInfo();
-            Console.WriteLine("Конструктор с 2 аргументами: decimal и TypeAccount");
-            bank3333.GetInfo();
+            Console.WriteLine("Исходная строка: " + exampleShort);
+            Console.WriteLine("Переворот через StringBuilder (или просто string): " + ReverseString(exampleShort));
+            Console.WriteLine("Переворот через массив символов: " + ReverseStringFast(exampleShort));
             Console.WriteLine();
+            Console.WriteLine("Оба варианта переворачивают корректно. Теперь замеряем производительность на короткой и длинной строке (5000 символов)");
             Console.WriteLine();
-
-            //Задание №4
-            Console.WriteLine("Задание №4");
-            BankAccountTask4 bank4 = new(7200, TypeAccount.Дебетовый);
-            Console.WriteLine("Конструктор с 2 аргументами: decimal и TypeAccount");
-            bank4.GetInfo();
-            bank4.Number = 555;
-            bank4.Type = TypeAccount.Инвестиционный;
-            bank4.Balance = 12430;
-            Console.WriteLine("Изменили через свойство: номер -  на 555, тип - на Инвестиционный и баланс  - на 12430");
-            bank4.GetInfo();
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+            ReverseString(exampleShort);
+            timer.Stop();
+            Console.WriteLine($"Короткая строка через StringBuilder:     {timer.Elapsed} ");
+            timer.Restart();
+            ReverseStringFast(exampleShort);
+            timer.Stop();
+            Console.WriteLine($"Короткая строка через массив символов:   {timer.Elapsed} ");
             Console.WriteLine();
+            timer.Restart();
+            ReverseString(exampleLong);
+            timer.Stop();
+            Console.WriteLine($"Длинная строка через StringBuilder:      {timer.Elapsed} ");
+            timer.Restart();
+            ReverseStringFast(exampleLong);
+            timer.Stop();
+            Console.WriteLine($"Длинная строка через массив символов:    {timer.Elapsed} ");
             Console.WriteLine();
-
-            //Задание №5
-            Console.WriteLine("Задание №5");
-            BankAccountTask5 bank5 = new(200, TypeAccount.Дебетовый, 55);
-            bank5.GetInfo();
-            Console.WriteLine("Cнять 300 у.е.");
-            bank5.TakeMoney(300);
-            Console.WriteLine("Положить 150 у.е.");
-            bank5.PutMoney(150);
-            Console.WriteLine("Cнять 300 у.е.");
-            bank5.TakeMoney(300);
-
-            Console.ReadKey();
-
+            Console.WriteLine("Как видим даже на больших строках (для которых предназначен StringBuilder) гораздо быстрее работает алгоритм через массив символов");
         }
     }
 }

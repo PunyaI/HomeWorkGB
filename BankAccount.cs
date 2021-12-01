@@ -4,7 +4,7 @@ using HomeWorkGeekBrains;
 
 namespace HomeWorkGB
 {
-    class BankAccountTask4
+    class BankAccount
     {
         private static int _lastNumber = 0;
 
@@ -41,18 +41,47 @@ namespace HomeWorkGB
             get { return _type; }
             set { _type = value; }
         }
-        public BankAccountTask4() : this(0, TypeAccount.Не_определен, 0) { }
-        public BankAccountTask4(decimal balance) : this(balance, TypeAccount.Не_определен, 0) { }
-        public BankAccountTask4(TypeAccount type) : this(0, type, 0) { }
-        public BankAccountTask4(int number) : this(0, TypeAccount.Не_определен, number) { }
-        public BankAccountTask4(decimal balance, TypeAccount type) : this(balance, type, 0) { }
-        public BankAccountTask4(decimal balance, TypeAccount type, int number)
+        public BankAccount() : this(0, TypeAccount.Не_определен, 0) { }
+        public BankAccount(decimal balance) : this(balance, TypeAccount.Не_определен, 0) { }
+        public BankAccount(TypeAccount type) : this(0, type, 0) { }
+        public BankAccount(int number) : this(0, TypeAccount.Не_определен, number) { }
+        public BankAccount(decimal balance, TypeAccount type) : this(balance, type, 0) { }
+        public BankAccount(decimal balance, TypeAccount type, int number)
         {
             Number = number;
             Balance = balance;
             Type = type;
         }
-
+        public void PutMoney(decimal value)
+        {
+            Balance += value;
+            Console.WriteLine($"Пополнение счёта на {value} у.е. прошло успешно. Ваш баланс: {Balance} у.е.");
+        }
+        public void TakeMoney(decimal value)
+        {
+            if (Balance < value)
+            {
+                Console.WriteLine("Ошибка! Недостаточно средств на счёте!");
+            }
+            else
+            {
+                Balance -= value;
+                Console.WriteLine($"Снятие денег со счёта на сумму {value} у.е. прошло успешно. Ваш остаток на балансе: {Balance} у.е.");
+            }
+        }
+        public void Transaction (BankAccount sender, decimal sum)
+        {
+            if(sender.Balance>=sum)
+            {
+                sender.Balance -= sum;
+                Balance += sum;
+                Console.WriteLine($"Перевод средств произведен успешно. На Ваш счёт поступило {sum} у.е. Текущий баланс: {Balance} у.е.");
+            } else
+            {
+                Console.WriteLine("Ошибка! Недостаточно средств на счёте отправителя.");
+            }
+            
+        }
         public void GetInfo()
         {
             Console.WriteLine("Номер банковского счёта: " + Number);
