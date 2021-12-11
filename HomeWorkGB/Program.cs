@@ -1,4 +1,5 @@
 ﻿using HomeWorkGB.Core;
+using HomeWorkGB.Core.Geometry;
 
 namespace HomeWorkGB
 {
@@ -7,24 +8,61 @@ namespace HomeWorkGB
     {
         static void Main(string[] args)
         {
-            Logger log = new ConsoleLogger();
-
-            Rational num1 = new();
-            Rational num2 = new(3, 2);
-            Rational num3 = new(6, 4);
-            Rational num4 = new(7,3);
-
-            bool j = num4 != num2;
-            log.ShowMessage($"Вывод объектов в строку: num1 - {num1.ToString()}, num2 - {num2.ToString()}, num3 - {num3.ToString()}, num4 - {num4.ToString()}");
-            log.ShowMessage($"Сравнение методом Equals: {num1} и {num2} - {num1.Equals(num2)}, числа {num2}  и {num3} - {num2.Equals(num3)}");
-            log.ShowMessage($"Сравнение операторами: {num2} == {num3} - {num2 == num3}, {num2} != {num3} - {num2 != num3}, {num2} > {num1} - {num2 > num1}, {num4} < {num3} - {num4 < num3}");
-            log.ShowMessage($"{num3} >= {num2} - {num3 >= num2}, {num4} <= {num2} - {num4 <= num2}, {num4} != {num1} - {num4 != num1}");
-            log.ShowMessage($"HashCode: Число по умолчанию {num1.GetHashCode()}, число {num2} {num2.GetHashCode()}, число {num3} {num3.GetHashCode()}, {num4} {num4.GetHashCode()}");
-            log.ShowMessage($"Преобразуем объект num3 ({num3}) в float  - {(float)num3}, а теперь в int - {(int)num3}");
-            log.ShowMessage($"Проверим операторы сложения, вычитания и инкремента: {num2} + {num1} = {num2 + num1}, {num3} - {num2} = {num3 - num2}, num1++ = {num1++}, num1-- = {num1--}");
-            log.ShowMessage($"Операторы умножения, деления и остатка от деления: {num4} * {num2} = {num4 * num2}, {num3} / {num2} = {num3 / num2}, {num4} % {num2} = {num4 % num2} ");
-            
+            Task1();
+            Task2();
             Console.ReadKey();
+        }
+
+        static void Task1()
+        {
+            Logger log = new ConsoleLogger();
+            log.ShowMessage("Задание №1");
+            BankAccount account1 = new(600, TypeAccount.Дебетовый);
+            BankAccount account2 = new(400, TypeAccount.Дебетовый);
+            BankAccount account3 = new(400, TypeAccount.Кредитный);
+            log.ShowMessage($"Вывод объекта account1 в строку - '{account1}'");
+            log.ShowMessage($"Вывод объекта account2 в строку - '{account2}'");
+            log.ShowMessage($"Вывод объекта account2 в строку - '{account3}'");
+            log.ShowMessage($"Сравним счета 1 и 2 методом Equals - {account1.Equals(account2)}");
+            log.ShowMessage($"Сравним счета операторами: account1 == account2 - {account1 == account2},   account2 != account 3 - {account2 != account3} ");
+            log.ShowMessage($"Посмотрим HashCode наших объектов: acсount1 - {account1.GetHashCode()}, acсount2 - {account2.GetHashCode()}, acсount3 - {account3.GetHashCode()}");
+        }
+
+        static void Task2()
+        {
+            Logger log = new ConsoleLogger();
+            log.ShowMessage("Задание №2");
+
+            Point point = new();
+            Circle circle = new(Status.Видимый,ConsoleColor.Red,3,4,2.5);
+            Rectangle rectangle = new(Status.Видимый,ConsoleColor.Yellow,4,5,3,7);
+
+            log.ShowMessage("Создаем точку с параметрами по-умолчанию, круг и прямоугольник с заданными параметрами:");
+
+            point.GetInfo();
+            circle.GetInfo();
+            rectangle.GetInfo();
+
+            point.MoveVertical(3);
+            point.MoveGorizont(-1);
+            point.Color = ConsoleColor.Green;
+
+            circle.MoveVertical(3);
+            circle.MoveGorizont(-1);
+            circle.Color = ConsoleColor.Green;
+
+            rectangle.MoveVertical(3);
+            rectangle.MoveGorizont(-1);
+            rectangle.Color = ConsoleColor.Green;
+
+            log.ShowMessage("");
+            log.ShowMessage("Сдвигаем все фигуры на 3 пункта по вертикали, -1 пункт по горизонтали и устанавливаем зелёный цвет ");
+
+            point.GetInfo();
+            circle.GetInfo();
+            rectangle.GetInfo();
+
+
         }
     }
 }
