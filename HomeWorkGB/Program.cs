@@ -1,8 +1,6 @@
-﻿
+﻿using HomeWorkGB.Core;
 
-using HomeWorkGB.Core;
-
-namespace HomeWorkGeekBrains
+namespace HomeWorkGB
 {
     
     class Program
@@ -10,34 +8,23 @@ namespace HomeWorkGeekBrains
         static void Main(string[] args)
         {
             Logger log = new ConsoleLogger();
-            Building building1 = Сreator.CreateBuild();
-            Building building2 = Сreator.CreateBuild(28, 4, 4, 5);
-            building1.Info();
-            building2.Info();
+
+            Rational num1 = new();
+            Rational num2 = new(3, 2);
+            Rational num3 = new(6, 4);
+            Rational num4 = new(7,3);
+
+            bool j = num4 != num2;
+            log.ShowMessage($"Вывод объектов в строку: num1 - {num1.ToString()}, num2 - {num2.ToString()}, num3 - {num3.ToString()}, num4 - {num4.ToString()}");
+            log.ShowMessage($"Сравнение методом Equals: {num1} и {num2} - {num1.Equals(num2)}, числа {num2}  и {num3} - {num2.Equals(num3)}");
+            log.ShowMessage($"Сравнение операторами: {num2} == {num3} - {num2 == num3}, {num2} != {num3} - {num2 != num3}, {num2} > {num1} - {num2 > num1}, {num4} < {num3} - {num4 < num3}");
+            log.ShowMessage($"{num3} >= {num2} - {num3 >= num2}, {num4} <= {num2} - {num4 <= num2}, {num4} != {num1} - {num4 != num1}");
+            log.ShowMessage($"HashCode: Число по умолчанию {num1.GetHashCode()}, число {num2} {num2.GetHashCode()}, число {num3} {num3.GetHashCode()}, {num4} {num4.GetHashCode()}");
+            log.ShowMessage($"Преобразуем объект num3 ({num3}) в float  - {(float)num3}, а теперь в int - {(int)num3}");
+            log.ShowMessage($"Проверим операторы сложения, вычитания и инкремента: {num2} + {num1} = {num2 + num1}, {num3} - {num2} = {num3 - num2}, num1++ = {num1++}, num1-- = {num1--}");
+            log.ShowMessage($"Операторы умножения, деления и остатка от деления: {num4} * {num2} = {num4 * num2}, {num3} / {num2} = {num3 / num2}, {num4} % {num2} = {num4 % num2} ");
             
-            building1.Apartments = 120;
-            building1.Floor = 5;
-            building1.High = 15;
-            building1.Entrances = 6;
-
-            building1.Info();
-
-            building1.GetFloorHigh();
-            building1.GetApartmentsPerEntrances();
-            building1.GetApartmentsPerFloor();
-
-            log.ShowMessage("");
-            log.ShowMessage($"Всего создано объектов: {Сreator.Buildings.Count.ToString()}");
-            log.ShowMessage("Пробуем удалить из хеш таблицы дом с номером 25");
-            Сreator.DeleteBuild(25);
-            log.ShowMessage($"Всего создано объектов: {Сreator.Buildings.Count.ToString()}");
-            log.ShowMessage("Пробуем удалить из хеш таблицы дом с номером 2");
-            Сreator.DeleteBuild(2);
-            log.ShowMessage($"Всего создано объектов: {Сreator.Buildings.Count.ToString()}");
-            log.ShowMessage("Выводим инфо об объекте дома с номером 2, который мы удалили из хеш таблицы");
-            building2.Info();
-            System.Console.ReadKey();
-
+            Console.ReadKey();
         }
     }
 }
